@@ -4,6 +4,9 @@ const stagePanel = document.querySelector("[data-stage-panel]");
 const timelineItems = document.querySelectorAll(".timeline-item");
 const filters = document.querySelectorAll(".filter");
 const portfolioCards = document.querySelectorAll(".portfolio-card");
+const cursorLight = document.querySelector(".cursor-light");
+const navLinks = document.querySelectorAll(".nav a");
+const sections = document.querySelectorAll("main section[id]");
 
 const stageCopy = {
   first:
@@ -62,3 +65,29 @@ const observer = new IntersectionObserver(
 );
 
 document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+
+window.addEventListener("pointermove", (event) => {
+  document.body.classList.add("pointer-active");
+  if (cursorLight) {
+    cursorLight.style.left = `${event.clientX}px`;
+    cursorLight.style.top = `${event.clientY}px`;
+  }
+});
+
+window.addEventListener("pointerleave", () => {
+  document.body.classList.remove("pointer-active");
+});
+
+const navObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      navLinks.forEach((link) => {
+        link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
+      });
+    });
+  },
+  { rootMargin: "-45% 0px -45% 0px", threshold: 0.01 }
+);
+
+sections.forEach((section) => navObserver.observe(section));
