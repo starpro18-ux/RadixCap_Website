@@ -7,6 +7,8 @@ const portfolioCards = document.querySelectorAll(".portfolio-card");
 const cursorLight = document.querySelector(".cursor-light");
 const navLinks = document.querySelectorAll(".nav a");
 const sections = document.querySelectorAll("main section[id]");
+const signalNodes = document.querySelectorAll(".node");
+const signalReadout = document.querySelector("[data-signal-readout]");
 
 const stageCopy = {
   first:
@@ -17,6 +19,29 @@ const stageCopy = {
     "We align on conviction, ownership, support needs, and the specific ways Radix can help the company reach its next proof point.",
   investing:
     "After investing, we support founders through targeted introductions, capital strategy, follow-on readiness, and ongoing pattern recognition."
+};
+
+const signalCopy = {
+  founder: {
+    title: "Founder Insight",
+    body: "We look for founders with a non-obvious view of the customer, market timing, or distribution path."
+  },
+  market: {
+    title: "Market Pull",
+    body: "We look for urgency: customers moving, budgets opening, regulation shifting, or behavior changing before consensus forms."
+  },
+  distribution: {
+    title: "Distribution",
+    body: "We pay attention to founders who have direct access to communities, buyers, or niche markets others struggle to reach."
+  },
+  execution: {
+    title: "Execution",
+    body: "We want evidence that the team can learn quickly, ship through uncertainty, and turn small proof points into compounding advantage."
+  },
+  expansion: {
+    title: "Expansion",
+    body: "We underwrite the wedge and the path beyond it: where the company can go if the first market works."
+  }
 };
 
 menuToggle?.addEventListener("click", () => {
@@ -37,6 +62,22 @@ timelineItems.forEach((item) => {
     item.classList.add("active");
     stagePanel.textContent = stageCopy[item.dataset.stage] || stageCopy.first;
   });
+});
+
+signalNodes.forEach((node) => {
+  const updateSignal = () => {
+    const selected = node.dataset.signal;
+    const copy = signalCopy[selected] || signalCopy.founder;
+    signalNodes.forEach((item) => item.classList.remove("active"));
+    node.classList.add("active");
+    if (signalReadout) {
+      signalReadout.innerHTML = `<span>${copy.title}</span><p>${copy.body}</p>`;
+    }
+  };
+
+  node.addEventListener("mouseenter", updateSignal);
+  node.addEventListener("focus", updateSignal);
+  node.addEventListener("click", updateSignal);
 });
 
 filters.forEach((filter) => {
